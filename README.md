@@ -6,6 +6,7 @@ Advanced and essential features for working with more complex projects
 
 ## Things Learned from this project
 
+### useEffect()
 - Effects (useEffect()) are useful to mitigate infinite render loops
   - e.g., If an https request was made upon a component render, then some piece of state was updated, the cycle would continue forever
   ```js
@@ -25,6 +26,18 @@ Advanced and essential features for working with more complex projects
       - can clear timer before the next one is called
     - useEffect can return a function (and only a function) - called a cleanup function
     - SEE: Login.js for useEffect cleanup function
+
+### useReducer()
+- useReducer - "more powerful state management" - useful when state becomes complex
+  - when you have state updates that depend on other states
+  - when you have multiple related states
+  - could have problem such as:
+    ```js
+    setFormIsValid(
+      event.target.value.includes('@') && enteredPassword.trim().length > 6
+    )
+    ```
+    - which could cause problems based on it updating from 2 other states, so the function form can't be used because it doesn't depend on it's own previous state, but on the previous state of the 2 others
 
 
 ## Other things to note
