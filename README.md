@@ -38,11 +38,75 @@ Advanced and essential features for working with more complex projects
     )
     ```
     - which could cause problems based on it updating from 2 other states, so the function form can't be used because it doesn't depend on it's own previous state, but on the previous state of the 2 others
+```js
+// useReducer()
+const [state, dispatchFn] = useReducer(reducerFn, initialState, initFn)
+```
+- Reducer function can be defined outside of scope of component, as it doesn't need to interact with any data that is defined inside of the component function
+  - All data required by function will be passed into function automatically by react when it is called
+- React guarantees that the state passed to the reducer function is the absolute latest state
+- Use object destructuring with alias to avoid re-running useEffect too many times
+```js
+const { attribute: attributeAlias } = someObject
+```
+  - The dependency array should only be filled with the *properties* that need to be watched for, and not the entire object
+  ```js
+  // Good Example
+  useEffect(() => {
+    ...
+  }, [somePropertyOfSomeObject]) // alias from destructuring
 
+  // Bad Example
+  useEffect(() => {
+    ...
+  }, [someObject])
+  ```
+
+### Context
+- React, built-in state storage that can be used to trigger actions to pass data only to the interested component
+  - Reduces/removes data chaining
+- Use the `Context.Provider` syntax around the components which will need the data
+- Use the `Context.Consumer` in the JSX of the component that needs to render based on the data in the context
+  - Can return directly in the JSX a function that takes the object provided by the context
+  ```js
+  <AuthContext.Consumer>
+    {(ctx) => {
+      return (
+        <JSX thatWas={hereBefore}>
+          <thatUses>
+            {ctx.property && (
+              <li>
+                Some data
+              </li>
+            )}
+          </thatUses>
+        </JSX>
+      )
+    }}
+  </AuthContext.Consumer>
+  ```
+  - Easier to use with `useContext()` hook
+  ```js
+  // less convoluted JSX code in the return
+  const ctx = useContext(authContext)
+  ```
+- Can move all of the logic for login/logout from the App component and move it all into the auth-context.js file where everything is consolidated
+  - Then export the Provider and wrap the entire (index.js) app in the Provider where every component gets access to the data in auth-context if it uses `useContext` hook within the component
+- Limitations:
+  - Should not replace component configuration
+    - props for configuration, context for state management across the entire app
+  - NOT optimiized for high frequency changes
+  - Should not be used to replace all component communications and props
+    - But still might be useful to replace long component prop chains
+
+### Rules of Hooks
+1. Only call React Hooks in React Functions (Component Functions/Custom Hooks)
+2. Only call React Hooks at the top level (don't call in nested/block statements)
+3. Always add everything referred to inside of useEffect() as a dependency (unless there's a good reason not to, such as state updating functions which are guaranteed to never change)
 
 ## Other things to note
 
-- 
+- Need to look up more examples/use cases for forwardRef/useImperativeHandle
 
 ## To run this project
 Clone this repo and cd into the project folder
